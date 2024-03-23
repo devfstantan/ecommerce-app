@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Bo\DashboardController;
 use App\Http\Controllers\Front\ProductController as FrontProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 // FrontOffice Routes
 Route::name('front.')->group(function(){
     Route::get('/', [FrontProductController::class,'index'])->name('index');
@@ -19,10 +22,14 @@ Route::name('front.')->group(function(){
 });
 
 // Backoffice Routes
-Route::name('bo.')->group(function(){
-    
+Route::prefix('bo')->name('bo.')->middleware('auth')->group(function(){
+    Route::get('/',[DashboardController::class, 'index'])->name('index');
 });
 
+// Auth Routes
+Route::name('auth.')->group(function(){
+    Route::get('/login', [AuthController::class,'login'])->name('login');
+    Route::post('/login', [AuthController::class,'authenticate'])->name('authenticate');
+    Route::post('/logout', [AuthController::class,'logout'])->name('logout');
+});
 
-
-// BackOffice Routes
