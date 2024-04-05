@@ -21,7 +21,7 @@
                 <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
                 Catégories
             </a>
-            <a class="nav-link collapsed" href="#" >
+            <a class="nav-link collapsed" href="{{route('bo.stores.index')}}" >
                 <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
                 Stores
             </a>

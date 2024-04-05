@@ -26,11 +26,13 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->text('description')->default('');
 
+            $table->foreignId('store_id')->constrained()->restrictOnDelete();
 
             $table->timestamps();
 
             $table->index('rating');
             $table->index('price');
+
         });
     }
 

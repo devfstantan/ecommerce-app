@@ -2,5 +2,5 @@
 @section('title','Tableau de board')
 
 @section('content')
-    Dashboard
+    <h3>Bien venu à l'interface Backoffice</h3>
 @endsection

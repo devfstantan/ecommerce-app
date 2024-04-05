@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Bo\DashboardController;
+use App\Http\Controllers\Bo\StoreController;
 use App\Http\Controllers\Front\ProductController as FrontProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,7 @@ Route::name('front.')->group(function(){
 // Backoffice Routes
 Route::prefix('bo')->name('bo.')->middleware('auth')->group(function(){
     Route::get('/',[DashboardController::class, 'index'])->name('index');
+    Route::resource('stores',StoreController::class);
 });
 
 // Auth Routes
