@@ -17,7 +17,7 @@
                     <a class="nav-link" href="layout-sidenav-light.html">Nouveau Produit</a>
                 </nav>
             </div>
-            <a class="nav-link collapsed" href="#" >
+            <a class="nav-link collapsed" href="{{route('bo.categories.index')}}" >
                 <div class="sb-nav-link-icon"><i class="fas fa-box"></i></div>
                 Catégories
             </a>

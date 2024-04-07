@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Bo\CategoryController;
 use App\Http\Controllers\Bo\DashboardController;
 use App\Http\Controllers\Bo\StoreController;
 use App\Http\Controllers\Front\ProductController as FrontProductController;
@@ -26,6 +27,7 @@ Route::name('front.')->group(function(){
 Route::prefix('bo')->name('bo.')->middleware('auth')->group(function(){
     Route::get('/',[DashboardController::class, 'index'])->name('index');
     Route::resource('stores',StoreController::class);
+    Route::resource('categories',CategoryController::class);
 });
 
 // Auth Routes
