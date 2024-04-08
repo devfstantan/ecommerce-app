@@ -1,12 +1,12 @@
 @extends('bo.layout.main')
-@section('title', 'Détails Store')
+@section('title', 'Détails Catégorie')
 
 @section('content')
    <div class="container py-5  my-5 bg-light ">
     <h4>{{ $category->name }}</h4>
     <p>{{ $category->description }}</p>
    </div>
-    {{-- @if (count($category->products))
+    @if (count($category->products))
     <table class="table table-hover">
         <thead>
             <th></th>
@@ -16,7 +16,7 @@
             <th></th>
         </thead>
         <tbody>
-            @foreach ($store->products as $product)
+            @foreach ($category->products as $product)
                 <tr>
                     <td>
                         <img src="{{ $product->image }}" alt="{{ $product->image }}" class="img-fluid" style="height:2em" />
@@ -35,5 +35,5 @@
     </table>
     @else
         <div class="text-center">Aucun Produit</div>
-    @endif --}}
+    @endif
 @endsection

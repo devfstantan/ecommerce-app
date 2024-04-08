@@ -5,7 +5,7 @@
                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                 Tableau de board
             </a>
-            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseProducts"
+            <a class="nav-link collapsed" href="{{route('bo.products.index')}}" data-bs-toggle="collapse" data-bs-target="#collapseProducts"
                 aria-expanded="false" aria-controls="collapseProducts">
                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                 Produits
@@ -13,8 +13,8 @@
             </a>
             <div class="collapse" id="collapseProducts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                 <nav class="sb-sidenav-menu-nested nav">
-                    <a class="nav-link" href="layout-static.html">Liste Produits</a>
-                    <a class="nav-link" href="layout-sidenav-light.html">Nouveau Produit</a>
+                    <a class="nav-link" href="{{route('bo.products.index')}}">Liste Produits</a>
+                    <a class="nav-link" href="{{route('bo.products.create')}}">Nouveau Produit</a>
                 </nav>
             </div>
             <a class="nav-link collapsed" href="{{route('bo.categories.index')}}" >

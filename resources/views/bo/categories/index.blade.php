@@ -18,7 +18,7 @@
             @foreach ($categories as $category)
                 <tr>
                     <td>{{ $category->name }}</td>
-                    <td>-1</td>
+                    <td>{{ $category->products_count}}</td>
                     <td>
                         <a href="{{ route('bo.categories.show', $category) }}" class="btn btn-outline-info btn-sm">
                             Afficher

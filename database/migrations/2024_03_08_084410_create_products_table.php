@@ -24,7 +24,7 @@ return new class extends Migration
             $table->float('price');
 
             $table->string('image')->nullable();
-            $table->text('description')->default('');
+            $table->text('description')->nullable();
 
             $table->foreignId('store_id')->constrained()->restrictOnDelete();
 
