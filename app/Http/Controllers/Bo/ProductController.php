@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
@@ -16,9 +17,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['store','categories'])->latest()->paginate();
+        $products = Product::with(['store', 'categories'])->latest()->paginate();
 
-        return view('bo.products.index',compact('products'));
+        return view('bo.products.index', compact('products'));
     }
 
     /**
@@ -28,7 +29,7 @@ class ProductController extends Controller
     {
         $stores = Store::all();
         $categories = Category::all();
-        return view('bo.products.create',[
+        return view('bo.products.create', [
             'stores' => $stores,
             'categories' => $categories
         ]);
@@ -48,21 +49,29 @@ class ProductController extends Controller
         // 1- validate le fomulaire
         $validated = $request->validate([
             'title' => ['required'],
-            'sku' => ['required','unique:products,sku'],
-            'price' => ['required','numeric','min:0'],
+            'sku' => ['required', 'unique:products,sku'],
+            'price' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable'],
-            'store_id' => ['required','exists:stores,id'],
-            'categories' => ['nullable','array'],
+            'store_id' => ['required', 'exists:stores,id'],
+            'categories' => ['nullable', 'array'],
+            "image" => ['nullable', 'image', 'max:2048']
         ]);
 
-        // 2- Créer le produits
+        // 2- store image
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('public/products');
+            $validated['image'] = str_replace('public', '/storage', $path);
+        }
+
+        // 3- Créer le produit
         $validated['is_published'] = isset($request->is_published);
         $product = Product::create($validated);
+
+        // 4- attacher catégories
         $product->categories()->attach($request->categories);
 
-        // 3- redériger vers la page bo.products.index
-        return to_route('bo.products.index')->with('success','Produit créé avec succès');
-
+        // 5- redériger vers la page bo.products.index
+        return to_route('bo.products.index')->with('success', 'Produit créé avec succès');
     }
 
     /**
@@ -70,7 +79,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('bo.products.show',compact('product'));
+        return view('bo.products.show', compact('product'));
     }
 
     /**
@@ -86,8 +95,8 @@ class ProductController extends Controller
 
         $stores = Store::all();
         $categories = Category::all();
-        
-        return view('bo.products.edit',[
+
+        return view('bo.products.edit', [
             'product' => $product,
             'selected_categories' => $selected_categories,
             'stores' => $stores,
@@ -104,19 +113,26 @@ class ProductController extends Controller
         $validated = $request->validate([
             'title' => ['required'],
             'sku' => ['required', Rule::unique('products', 'sku')->ignore($product->id)],
-            'price' => ['required','numeric','min:0'],
+            'price' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable'],
-            'store_id' => ['required','exists:stores,id'],
-            'categories' => ['nullable','array'],
+            'store_id' => ['required', 'exists:stores,id'],
+            'categories' => ['nullable', 'array'],
+            "image" => ['nullable', 'image', 'max:2048']
         ]);
+         // 1- update image
+        if ($request->hasFile('image')) {
+            Storage::delete( str_replace('/storage', 'public', $product->image) );
+            $path = $request->file('image')->store('public/products');
+            $validated['image'] = str_replace('public', '/storage', $path);
+        }
 
-        // 2- Mettre à jour le produits
+        // 2- Mettre à jour le produit
         $validated['is_published'] = isset($request->is_published);
         $product->update($validated);
         $product->categories()->sync($request->categories);
 
         // 3- redériger vers la page bo.products.index
-        return to_route('bo.products.index')->with('success','Produit mis à jour avec succès');
+        return to_route('bo.products.index')->with('success', 'Produit mis à jour avec succès');
     }
 
     /**
@@ -124,9 +140,14 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        // 1- supprimer l'image
+        if($product->image){
+            Storage::delete( str_replace('/storage', 'public', $product->image) );
+        }
+        // 2- supprimer le produit
         $product->delete();
-        return to_route('bo.products.index')->with('success','Produit Supprimé avec succès');
 
-
+        // 3- redirect vers products.index
+        return to_route('bo.products.index')->with('success', 'Produit Supprimé avec succès');
     }
 }

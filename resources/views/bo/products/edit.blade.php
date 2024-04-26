@@ -2,7 +2,7 @@
 @section('title', 'Editer Produit')
 
 @section('content')
-    <form action="{{ route('bo.products.update',$product) }}" method="post">
+    <form action="{{ route('bo.products.update',$product) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="row">
@@ -104,6 +104,16 @@
                     >{{ $product->description }} </textarea>
                     <label for="description">Description</label>
                     @error('description')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+             {{-- Image --}}
+             <div class="col-md-12">
+                <div class="mb-3">
+                    <label for="image" class="form-label">Image</label>
+                    <input class="form-control" type="file" id="image" name="image" accept="image/*">
+                    @error('image')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>

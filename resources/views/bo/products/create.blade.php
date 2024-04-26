@@ -2,7 +2,11 @@
 @section('title', 'Nouveau Produit')
 
 @section('content')
-    <form action="{{ route('bo.products.store') }}" method="post">
+    <form 
+        action="{{ route('bo.products.store') }}" 
+        method="post" 
+        enctype="multipart/form-data"
+    >
         @csrf
 
         <div class="row">
@@ -101,6 +105,16 @@
                     <textarea id="description" name="description" placeholder="" class="form-control" style="height: 100px">{{ old('description') }}</textarea>
                     <label for="description">Description</label>
                     @error('description')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            {{-- Image --}}
+            <div class="col-md-12">
+                <div class="mb-3">
+                    <label for="image" class="form-label">Image</label>
+                    <input class="form-control" type="file" id="image" name="image" accept="image/*">
+                    @error('image')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
