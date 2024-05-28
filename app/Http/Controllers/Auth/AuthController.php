@@ -34,7 +34,8 @@ class AuthController extends Controller
         if (Auth::attempt($credentials,$remember)) {
             $request->session()->regenerate();
 
-            return redirect()->route('bo.index');
+            $home = Auth::user()->role === 'admin' ? 'bo.index': 'manager.index' ;
+            return redirect()->route($home);
         }
 
         return back()->withErrors([

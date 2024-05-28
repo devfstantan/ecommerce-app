@@ -1,10 +1,16 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+
 use App\Http\Controllers\Bo\CategoryController;
-use App\Http\Controllers\Bo\DashboardController;
+use App\Http\Controllers\Bo\DashboardController as BoDashboardController;
 use App\Http\Controllers\Bo\ProductController as BoProductController;
-use App\Http\Controllers\Bo\StoreController;
+use App\Http\Controllers\Bo\StoreController as BoStoreController;
+
+use App\Http\Controllers\Manager\DashboardController as ManagerDashboardController;
+use App\Http\Controllers\Manager\ProductController as ManagerProductController;
+use App\Http\Controllers\Manager\StoreController as ManagerStoreController;
+
 use App\Http\Controllers\Front\ProductController as FrontProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,10 +32,21 @@ Route::name('front.')->group(function(){
 
 // Backoffice Routes
 Route::prefix('bo')->name('bo.')->middleware('auth')->group(function(){
-    Route::get('/',[DashboardController::class, 'index'])->name('index');
-    Route::resource('stores',StoreController::class);
+    Route::get('/',[BoDashboardController::class, 'index'])->name('index');
+    Route::resource('stores',BoStoreController::class);
     Route::resource('categories',CategoryController::class);
     Route::resource('products',BoProductController::class);
+});
+
+// Backoffice Routes
+Route::prefix('manager')->name('manager.')->middleware('auth')->group(function(){
+    Route::get('/',[ManagerDashboardController::class, 'index'])->name('index');
+
+    Route::get('/store',[ManagerStoreController::class,'show'])->name('store.show');
+    Route::get('/store/edit',[ManagerStoreController::class,'edit'])->name('store.edit');
+    Route::put('/store',[ManagerStoreController::class,'update'])->name('store.update');
+    
+    Route::resource('products',ManagerProductController::class);
 });
 
 // Auth Routes
