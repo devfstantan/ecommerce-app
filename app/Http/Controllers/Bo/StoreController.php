@@ -52,8 +52,11 @@ class StoreController extends Controller
             'name' => $validated['manager_name'],
             'email' => $validated['manager_email'],
             'password' => Hash::make($validated['manager_password']),
-            'email_verified_at' => new Date()
         ]);
+
+        $manager->email_verified_at = Date::now();
+        $manager->role = 'store-manager';
+        $manager->save();
 
         // 3- creéer le store
         Store::create([

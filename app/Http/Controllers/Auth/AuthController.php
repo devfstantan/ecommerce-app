@@ -26,15 +26,21 @@ class AuthController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-        
+
         $remember = !!$request->remember;
-        
+
 
         // 2- connexion de l'utilisateur
-        if (Auth::attempt($credentials,$remember)) {
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            return redirect()->route('bo.index');
+
+            $home = Auth::user()->role === 'admin' ?
+                'bo.index'
+                : 'manager.index';
+            // dd($home);
+            // dd(Auth::user()->role); 
+            return redirect()->route($home);
         }
 
         return back()->withErrors([
@@ -48,11 +54,11 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
- 
+
         $request->session()->invalidate();
-     
+
         $request->session()->regenerateToken();
-     
+
         return redirect()->route('front.index');
     }
 }
