@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Bo;
 
 use App\Http\Controllers\Controller;
 use App\Models\Store;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class StoreController extends Controller
@@ -14,8 +17,11 @@ class StoreController extends Controller
      */
     public function index()
     {
-        $stores = Store::withCount('products')->latest('products_count')->paginate();
-        return view('bo.stores.index',compact('stores'));
+        $stores = Store::withCount('products')
+            ->with('manager')
+            ->latest('products_count')
+            ->paginate();
+        return view('bo.stores.index', compact('stores'));
     }
 
     /**
@@ -33,15 +39,31 @@ class StoreController extends Controller
     {
         // 1- valider le formulaire
         $validated = $request->validate([
-            'name' => ['required','unique:stores,name'],
-            'address' => ['nullable','min:5'],
-            'phone' => ['nullable','regex:/^\+?[0-9 -\.]+$/']
+            'name' => ['required', 'unique:stores,name'],
+            'address' => ['nullable', 'min:5'],
+            'phone' => ['nullable', 'regex:/^\+?[0-9 -\.]+$/'],
+            'manager_name' => ['required'],
+            'manager_email' => ['required','email','unique:users,email'],
+            'manager_password' => ['required','min:6','confirmed'],
         ]);
 
-        // 2- creéer le store
-        Store::create($validated);
+        // 2- créer le manager
+        $manager = User::create([
+            'name' => $validated['manager_name'],
+            'email' => $validated['manager_email'],
+            'password' => Hash::make($validated['manager_password']),
+        ]);
+        $manager->role = "store-manager";
+        $manager->email_verified_at = Date::now();
+        $manager->save();
+        
+        // 3- creéer le store
+        $store = Store::create($validated);
 
-        // 3- redériger vers l'index des stores
+        $store->manager_id = $manager->id;
+        $store->save();
+
+        // 4- redériger vers l'index des stores
         return to_route('bo.stores.index');
     }
 
@@ -50,7 +72,7 @@ class StoreController extends Controller
      */
     public function show(Store $store)
     {
-        return view('bo.stores.show',compact('store'));
+        return view('bo.stores.show', compact('store'));
     }
 
     /**
@@ -58,7 +80,7 @@ class StoreController extends Controller
      */
     public function edit(Store $store)
     {
-        return view('bo.stores.edit',compact('store'));
+        return view('bo.stores.edit', compact('store'));
     }
 
     /**
@@ -72,8 +94,8 @@ class StoreController extends Controller
                 'required',
                 Rule::unique('stores', 'name')->ignore($store->id)
             ],
-            'address' => ['nullable','min:5'],
-            'phone' => ['nullable','regex:/^\+?[0-9 -\.]+$/']
+            'address' => ['nullable', 'min:5'],
+            'phone' => ['nullable', 'regex:/^\+?[0-9 -\.]+$/']
         ]);
 
         // 2- creéer le store
@@ -89,11 +111,13 @@ class StoreController extends Controller
     public function destroy(Store $store)
     {
         $has_products = $store->products()->exists();
-        if($has_products){
-            return  to_route("bo.stores.index")->with('error','Impossible de supprimer le store');
+        if ($has_products) {
+            return  to_route("bo.stores.index")->with('error', 'Impossible de supprimer le store');
         }
-        if($store->delete()){
-            return  to_route("bo.stores.index")->with('success','Store Supprimé');
+        
+        $manager = $store->manager;
+        if ($store->delete() && $manager->delete()) {
+            return  to_route("bo.stores.index")->with('success', 'Store Supprimé');
         }
     }
 }

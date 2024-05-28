@@ -8,8 +8,9 @@
             <h4>{{ $store->name }}</h4>
         </div>
         <div class="col-6">
-            Tél: {{ $store->phone }}
-            Adreesse : {{ $store->address }}
+            Tél: {{ $store->phone }} <br>
+            Adreesse : {{ $store->address }} <br>
+            Manager: {{ $store->manager->name }}
         </div>
     </div>
    </div>

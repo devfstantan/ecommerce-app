@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,10 +17,14 @@ class StoreFactory extends Factory
      */
     public function definition(): array
     {
+        $manager = User::factory()->create([
+            'role' => 'store-manager'
+        ]);
         return [
             'name' => fake()->unique()->company(),
             'address' => fake()->address(),
-            'phone' => fake()->phoneNumber()
+            'phone' => fake()->phoneNumber(),
+            'manager_id' => $manager->id
         ];
     }
 }

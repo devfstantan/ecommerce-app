@@ -8,6 +8,7 @@
                 <th>Nom</th>
                 <th>Téléphone</th>
                 <th>Nombre de produits</th>
+                <th>Manager</th>
                 <th>
                     <a href="{{ route('bo.stores.create') }}" class="btn btn-outline-primary btn-sm">
                         Nouveau Store
@@ -21,6 +22,7 @@
                     <td>{{ $store->name }}</td>
                     <td>{{ $store->phone }}</td>
                     <td>{{ $store->products_count }}</td>
+                    <td>{{ $store->manager->name }}</td>
                     <td>
                         <a href="{{ route('bo.stores.show', $store) }}" class="btn btn-outline-info btn-sm">
                             Afficher

@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
+            $table->foreignId('manager_id')
+                ->nullable()
+                ->constrained('users', 'id')
+                ->cascadeOnDelete();
             $table->timestamps();
         });
     }
