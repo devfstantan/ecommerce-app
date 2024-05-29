@@ -31,7 +31,7 @@ Route::name('front.')->group(function(){
 });
 
 // Backoffice Routes
-Route::prefix('bo')->name('bo.')->middleware('auth')->group(function(){
+Route::prefix('bo')->name('bo.')->middleware(['auth','role:admin'])->group(function(){
     Route::get('/',[BoDashboardController::class, 'index'])->name('index');
     Route::resource('stores',BoStoreController::class);
     Route::resource('categories',CategoryController::class);
@@ -39,7 +39,7 @@ Route::prefix('bo')->name('bo.')->middleware('auth')->group(function(){
 });
 
 // Backoffice Routes
-Route::prefix('manager')->name('manager.')->middleware('auth')->group(function(){
+Route::prefix('manager')->name('manager.')->middleware(['auth','role:store-manager'])->group(function(){
     Route::get('/',[ManagerDashboardController::class, 'index'])->name('index');
 
     Route::get('/store',[ManagerStoreController::class,'show'])->name('store.show');
