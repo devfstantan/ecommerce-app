@@ -6,6 +6,9 @@
     <div class="row">
         <div class="col-6">
             <h4>{{ $store->name }}</h4>
+            <a href="{{ route('manager.store.edit') }}" class="btn btn-outline-warning btn-sm">
+                <i class="fa-solid fa-pen"></i> Editer
+            </a>
         </div>
         <div class="col-6">
             Tél: {{ $store->phone }} <br>

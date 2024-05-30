@@ -2,7 +2,7 @@
 @section('title','Editer Store')
 
 @section('content')
-<form action="{{ route('manager.stores.update',$store) }}" method="post">
+<form action="{{ route('manager.store.update') }}" method="post">
     @csrf
     @method('PUT')
 

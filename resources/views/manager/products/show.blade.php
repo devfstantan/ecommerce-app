@@ -24,9 +24,6 @@
             Rating: {{$product->rating}} ( {{$product->scores_count}}  ) 
         </li>
         <li class="list-group-item">
-            Store: <a href="{{ route('manager.stores.show', $product->store) }}">{{ $product->store->name }}</a>
-        </li>
-        <li class="list-group-item">
             Catégories:
             @foreach ($product->categories as $cat)
                 <span class="badge text-bg-light">{{ $cat->name }}</span>

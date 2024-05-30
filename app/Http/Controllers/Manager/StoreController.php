@@ -52,7 +52,7 @@ class StoreController extends Controller
         $store->update($validated);
 
         // 3- redériger vers l'index des stores
-        return to_route('manager.stores.index');
+        return to_route('manager.store.show');
     }
 
     

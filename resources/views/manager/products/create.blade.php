@@ -60,24 +60,6 @@
                 </div>
             </div>
 
-            {{-- Store --}}
-            <div class="col-md-6">
-                <div class="form-floating mb-3">
-                    <select class="form-select" id="store_id" name="store_id" aria-label="Store">
-                        <option value="">Choisir un store</option>
-                        @foreach ($stores as $store)
-                            <option value="{{ $store->id }}" @selected(old('store_id') == $store->id)>
-                                {{ $store->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <label for="store_id">Store</label>
-                    @error('store_id')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-
             {{-- Categories --}}
             <div class="col-md-12 p-2 ">
                 <label for="">Catégories</label>

@@ -11,7 +11,6 @@
                 <th>Rating</th>
                 <th>Prix</th>
                 <th>Est publié?</th>
-                <th>Store</th>
                 <th>Catégories</th>
                 <th colspan="2" class="text-end">
                     <a href="{{ route('manager.products.create') }}" class="btn btn-outline-primary btn-sm">
@@ -41,9 +40,6 @@
                             @endif
                         </td>
                         <td>
-                            <a href="{{ route('manager.stores.show', $product->store) }}">{{ $product->store->name }}</a>
-                        </td>
-                        <td>
                             @foreach ($product->categories as $cat)
                                 <span class="badge text-bg-light">{{ $cat->name }}</span>
                             @endforeach
@@ -70,7 +66,13 @@
             </tbody>
         </table>
     @else
-        <div class="text-center">Aucun Produit</div>
+        <div class="text-center">
+            Aucun Produit <br>
+            <a href="{{ route('manager.products.create') }}" class="btn btn-outline-primary btn-sm">
+                Créer mon 1er Produit
+            </a>
+        </div>
+
     @endif
     {{ $products->links() }}
 @endsection

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -17,7 +18,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['store', 'categories'])->latest()->paginate();
+        $products = Product::with(['store', 'categories'])
+        ->where('store_id',  Auth::user()->store->id)
+        ->latest()
+        ->paginate();
 
         return view('manager.products.index', compact('products'));
     }
@@ -52,7 +56,6 @@ class ProductController extends Controller
             'sku' => ['required', 'unique:products,sku'],
             'price' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable'],
-            'store_id' => ['required', 'exists:stores,id'],
             'categories' => ['nullable', 'array'],
             "image" => ['nullable', 'image', 'max:2048']
         ]);
@@ -65,6 +68,7 @@ class ProductController extends Controller
 
         // 3- Créer le produit
         $validated['is_published'] = isset($request->is_published);
+        $validated['store_id'] = Auth::user()->store->id;
         $product = Product::create($validated);
 
         // 4- attacher catégories
@@ -115,7 +119,6 @@ class ProductController extends Controller
             'sku' => ['required', Rule::unique('products', 'sku')->ignore($product->id)],
             'price' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable'],
-            'store_id' => ['required', 'exists:stores,id'],
             'categories' => ['nullable', 'array'],
             "image" => ['nullable', 'image', 'max:2048']
         ]);

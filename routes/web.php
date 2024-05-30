@@ -41,6 +41,7 @@ Route::prefix('bo')->name('bo.')->middleware('auth')->group(function(){
 Route::prefix('manager')->name('manager.')->middleware('auth')->group(function(){
     Route::get('/',[ManagerDashboardController::class, 'index'])->name('index');
     Route::resource('products',ManagerProductController::class);
+    
     Route::get('store',[ManagerStoreController::class,'show'])->name('store.show');
     Route::get('store/edit',[ManagerStoreController::class,'edit'])->name('store.edit');
     Route::put('store',[ManagerStoreController::class,'update'])->name('store.update');
