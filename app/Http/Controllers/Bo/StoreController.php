@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Bo;
 
 use App\Http\Controllers\Controller;
+use App\Mail\StoreCreatedMail;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class StoreController extends Controller
@@ -63,7 +65,11 @@ class StoreController extends Controller
         $store->manager_id = $manager->id;
         $store->save();
 
-        // 4- redériger vers l'index des stores
+        // 4- envoyer l'email au manager
+        Mail::to($manager->email)->send(
+            new StoreCreatedMail($manager, $store, $validated['manager_password'])
+        );
+        // 5- redériger vers l'index des stores
         return to_route('bo.stores.index');
     }
 
